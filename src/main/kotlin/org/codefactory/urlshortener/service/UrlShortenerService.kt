@@ -25,4 +25,7 @@ class UrlShortenerService (private val repository: UrlMappingRepository){
         println("Enter inside shortenUrl function")
         return shortUrl
     }
+    fun getLongUrl(shortUrl: String): String? {
+        return repository.findByShortUrl(shortUrl)?.longUrl
+    }
 }

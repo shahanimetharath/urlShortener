@@ -15,8 +15,19 @@ class UrlShortenerController (private val service: UrlShortenerService){
     fun shorten(@RequestBody request: UrlRequest): UrlResponse {
         println("Enter shorten URL api request")
         val shortUrl = service.shortenUrl(request.longUrl)
-        println("Exit shorten URL api request")
+        println("Exit shorten URL api request wih")
         return UrlResponse("http://localhost:8080/$shortUrl")
     }
-
+    @GetMapping("/{shortUrl}")
+    fun redirect(@PathVariable shortUrl: String): ResponseEntity<Any> {
+        println("Enter into redirect")
+        val longUrl = service.getLongUrl(shortUrl)
+        return if (longUrl != null) {
+            ResponseEntity.status(302)
+                .header("Location", longUrl)
+                .build()
+        } else {
+            ResponseEntity.notFound().build()
+        }
+    }
 }
