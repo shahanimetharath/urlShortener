@@ -40,6 +40,16 @@ class UrlShortenerApplicationTests(
 
         assertEquals(code1, code2)
     }
+    @Test
+    fun `get original URL should return correct URL`() {
+        val originalUrl = "https://mail.google.com"
+        val shortCode = service.shortenUrl(originalUrl).toString()
+
+        val resolved = service.getLongUrl(shortCode)
+        assertEquals(originalUrl, resolved)
+    }
+
+
 
 
 
