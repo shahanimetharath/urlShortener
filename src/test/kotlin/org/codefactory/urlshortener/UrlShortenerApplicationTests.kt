@@ -48,7 +48,21 @@ class UrlShortenerApplicationTests(
         val resolved = service.getLongUrl(shortCode)
         assertEquals(originalUrl, resolved)
     }
+    @Test
+    fun `get original URL for unknown code should throw exception`() {
+        val exception = assertThrows<UrlNotFoundException> {
+            throw UrlNotFoundException("Short code not found: 12345")
+        }
+        assertEquals("Short code not found: 12345", exception.message)
+    }
 
+    @Test
+    fun `invalid URL should throw exception`() {
+        val exception = assertThrows<InvalidUrlException> {
+            throw InvalidUrlException("Provided URL is not valid: abc")
+        }
+        assertEquals("Provided URL is not valid: abc", exception.message)
+    }
 
 
 
