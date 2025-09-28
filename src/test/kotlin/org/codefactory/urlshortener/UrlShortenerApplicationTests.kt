@@ -64,7 +64,34 @@ class UrlShortenerApplicationTests(
         assertEquals("Provided URL is not valid: abc", exception.message)
     }
 
+    @Test
+    fun `controller should shorten and resolve URL via API`() {
+        val originalUrl = "https://www.linkedin.com/"
 
+        // Shorten URL via POST
+        val shortenResult = mockMvc.perform(
+            post("/shorten")
+                .content("""{"longUrl":"$originalUrl"}""")
+                .contentType("application/json")
+        )
+            .andExpect(status().isOk)
+            .andReturn()
 
+        // Parse JSON and extract shortUrl
+        val responseJson = shortenResult.response.contentAsString
+        //println("responseJson = $responseJson")
+        val objectMapper = ObjectMapper()
+        var shortCode = objectMapper.readTree(shortenResult.response.contentAsString)
+            .get("shortUrl").asText()
+       // println("shortCode = $shortCode originalUrl = $originalUrl")
+        //get the short code from short URL
+        shortCode = shortCode.takeLast(7)
+       // println("shortCode = $shortCode originalUrl = $originalUrl")
+
+        // Retrieve original URL via GET
+        mockMvc.perform(get("/$shortCode"))
+            .andExpect(status().is3xxRedirection)
+            .andExpect(header().string("Location", originalUrl))
+    }
 
 }
