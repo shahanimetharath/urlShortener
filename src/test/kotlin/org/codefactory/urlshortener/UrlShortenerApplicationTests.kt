@@ -32,6 +32,15 @@ class UrlShortenerApplicationTests(
             assertTrue(shortCode.length in 4..10)
         }
     }
+    @Test
+    fun `same long URL should return same short code`() {
+        val url = "https://www.youtube.com/"
+        val code1 = service.shortenUrl(url)
+        val code2 = service.shortenUrl(url)
+
+        assertEquals(code1, code2)
+    }
+
 
 
 }
