@@ -10,8 +10,16 @@ class UrlShortenerService (private val repository: UrlMappingRepository){
 
     private val chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-    fun shortenUrl(longUrl: String): String {
+    fun shortenUrl(longUrl: String): String? {
         println("Enter inside shortenUrl function")
+       val existingShorUrl : String
+        val existing = repository.findByLongUrl(longUrl)
+        if (existing != null) {
+            println("Found existing long url: $longUrl")
+            existingShorUrl = repository.findByLongUrl(longUrl)?.shortUrl.toString()
+            println("Existing short url: $existingShorUrl")
+            return existingShorUrl
+        }
         // Generate random 7-character string until unique
         var shortUrl: String
         do {
@@ -26,6 +34,13 @@ class UrlShortenerService (private val repository: UrlMappingRepository){
         return shortUrl
     }
     fun getLongUrl(shortUrl: String): String? {
-        return repository.findByShortUrl(shortUrl)?.longUrl
+        //return repository.findByShortUrl(shortUrl)?.longUrl
+        try{
+        val mapping = repository.findByShortUrl(shortUrl)?.longUrl
+            return mapping
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+           return null
+        }
     }
 }
