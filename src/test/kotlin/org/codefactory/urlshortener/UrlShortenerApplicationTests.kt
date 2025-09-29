@@ -79,14 +79,12 @@ class UrlShortenerApplicationTests(
 
         // Parse JSON and extract shortUrl
         val responseJson = shortenResult.response.contentAsString
-        //println("responseJson = $responseJson")
         val objectMapper = ObjectMapper()
         var shortCode = objectMapper.readTree(shortenResult.response.contentAsString)
             .get("shortUrl").asText()
-       // println("shortCode = $shortCode originalUrl = $originalUrl")
+
         //get the short code from short URL
         shortCode = shortCode.takeLast(7)
-       // println("shortCode = $shortCode originalUrl = $originalUrl")
 
         // Retrieve original URL via GET
         mockMvc.perform(get("/$shortCode"))
