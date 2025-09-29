@@ -14,15 +14,12 @@ class UrlShortenerService (private val repository: UrlMappingRepository){
     private val chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
     fun shortenUrl(longUrl: String): String? {
-       // println("Enter inside shortenUrl function")
         logger.debug("Checking if long URL already exists: $longUrl")
        val existingShorUrl : String
         val existing = repository.findByLongUrl(longUrl)
         if (existing != null) {
-           // println("Found existing long url: $longUrl")
             logger.info("Found existing long url: $longUrl")
             existingShorUrl = repository.findByLongUrl(longUrl)?.shortUrl.toString()
-           // println("Existing short url: $existingShorUrl")
             logger.info("Found existing shortened URL for: $longUrl is $existingShorUrl")
             return existingShorUrl
         }
